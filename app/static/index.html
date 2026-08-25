@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Sqawe</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="logo">SQAWE<span>.</span></div>
+      <div id="status" class="status">ONLINE</div>
+    </header>
+
+    <main>
+      <section id="feed-view" class="view active">
+        <div class="section-title">
+          <h1>Лента</h1>
+          <button id="refresh-btn" class="ghost">↻</button>
+        </div>
+        <div id="feed" class="feed"></div>
+      </section>
+
+      <section id="create-view" class="view">
+        <div class="section-title"><h1>Новый пост</h1></div>
+        <form id="post-form" class="card">
+          <label class="upload">
+            <input id="image" type="file" accept="image/*" required>
+            <div id="preview">＋ Выбрать фото</div>
+          </label>
+          <textarea id="caption" maxlength="1000" placeholder="Подпись..."></textarea>
+          <button class="primary" type="submit">Опубликовать</button>
+          <div id="form-error" class="error"></div>
+        </form>
+      </section>
+
+      <section id="profile-view" class="view">
+        <div class="section-title"><h1>Профиль</h1></div>
+        <div id="profile"></div>
+      </section>
+    </main>
+
+    <nav class="nav">
+      <button data-view="feed-view" class="nav-btn active">⌂<small>Лента</small></button>
+      <button data-view="create-view" class="nav-btn">＋<small>Создать</small></button>
+      <button data-view="profile-view" class="nav-btn">◉<small>Профиль</small></button>
+    </nav>
+  </div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
