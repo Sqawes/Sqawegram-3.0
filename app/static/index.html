@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <title>Sqawe</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="logo">SQAWE<span>.</span></div>
+    <div id="build-number" class="build-number">build</div>
+    <div class="topbar-right">
+      <button id="notifications-btn" class="notification-btn" type="button" onclick="showView('notifications-view')" aria-label="Уведомления">🔔<span id="notification-badge" class="notification-badge" hidden>0</span></button>
+      <div id="status" class="status">ONLINE</div>
+      <button id="theme-menu-btn" class="top-more-btn" type="button" aria-label="Дополнительные настройки">⋯</button>
+      <div id="top-menu" class="top-menu" hidden>
+        <button id="open-theme-picker" type="button">Сменить тему</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="feed-view" class="view active">
+      <div class="feed-head" aria-label="Раздел ленты">
+        <h1>Лента</h1>
+        <button id="feed-tab-people" class="feed-tab active" type="button" aria-label="Публикации людей" aria-pressed="true">Люди</button>
+        <button id="feed-tab-global" class="feed-tab" type="button" aria-label="Новости" aria-pressed="false">Новости</button>
+      </div>
+
+      <div class="feed-refresh-row">
+        <button id="refresh-btn" class="ghost feed-refresh" type="button" aria-label="Обновить">↻</button>
+      </div>
+
+      <div id="people-feed-panel" class="feed-panel active">
+        <div id="stories-strip" class="stories-strip"></div>
+        <div id="feed" class="feed"></div>
+      </div>
+
+      <div id="global-news-panel" class="feed-panel">
+        <div id="news-strip" class="news-strip"></div>
+      </div>
+    </section>
+
+    <section id="friends-view" class="view">
+      <div class="section-title"><h1>Друзья</h1><button id="refresh-friends-btn" class="ghost" type="button">↻</button></div>
+      <div class="friend-search"><input id="friend-search-input" type="text" placeholder="@username" autocomplete="off"><button id="friend-search-btn" class="primary" type="button">Найти</button></div>
+      <div id="friend-search-results"></div>
+      <div id="friends"></div>
+    </section>
+
+    <section id="people-view" class="view">
+      <div class="section-title"><h1>Люди</h1><button id="refresh-people-btn" class="ghost" type="button">↻</button></div>
+      <div class="friend-search"><input id="people-search-input" type="text" placeholder="Поиск по username" autocomplete="off"></div>
+      <div id="people-list"></div>
+    </section>
+
+    <section id="notifications-view" class="view">
+      <div class="section-title"><h1>Уведомления</h1><button id="refresh-notifications-btn" class="ghost" type="button">↻</button></div>
+      <div class="notification-tools"><button id="read-all-btn" class="ghost" type="button">Отметить всё прочитанным</button></div>
+      <div id="notifications"></div>
+    </section>
+
+    <section id="create-view" class="view">
+      <div class="section-title"><h1>Новый пост</h1></div>
+      <form id="post-form" class="card">
+        <label class="upload"><input id="image" type="file" accept="image/*" required><div id="preview">＋ Выбрать фото</div></label>
+        <textarea id="caption" maxlength="1000" placeholder="Что нового?"></textarea>
+        <div class="tag-picker"><div class="tag-title">Отметить людей</div><div class="tag-search-row"><input id="tag-search-input" type="text" placeholder="@username" autocomplete="off"><button id="tag-search-btn" class="ghost" type="button">Найти</button></div><div id="tag-search-results"></div><div id="selected-tags" class="selected-tags"></div></div>
+        <input id="tag-ids" type="hidden" value="">
+        <button class="primary" type="submit">Опубликовать</button>
+        <div id="form-error" class="error"></div>
+      </form>
+    </section>
+
+    <section id="profile-view" class="view"><div class="section-title"><h1>Профиль</h1></div><div id="profile"></div></section>
+
+    <section id="settings-view" class="view"><div class="section-title"><h1>Настройки</h1><button class="ghost" type="button" onclick="showView('profile-view')">← Назад</button></div><div id="settings"></div></section>
+  </main>
+
+
+  <div id="stories-viewer" class="stories-viewer" hidden>
+    <div id="story-backdrop" class="stories-viewer-backdrop"></div>
+    <div class="stories-viewer-top">
+      <button id="story-close" class="image-viewer-icon" type="button">×</button>
+      <div class="story-owner-wrap">
+        <div id="story-owner" class="story-owner"></div>
+        <div id="story-time" class="story-time"></div>
+      </div>
+      <div id="story-count" class="story-count"></div>
+    </div>
+    <div class="story-stage">
+      <img id="story-image" class="story-image" alt="История">
+    </div>
+    <div id="story-caption" class="story-caption"></div>
+    <button id="story-prev" class="story-arrow left" type="button" aria-label="Предыдущая история">‹</button>
+    <button id="story-next" class="story-arrow right" type="button" aria-label="Следующая история">›</button>
+    <div id="story-progress-track" class="story-progress-track" aria-label="Перемотка истории">
+      <div id="story-progress-fill" class="story-progress-fill"></div>
+    </div>
+  </div>
+
+  <div id="image-viewer" class="image-viewer" aria-hidden="true">
+    <div class="image-viewer-backdrop"></div>
+    <div class="image-viewer-topbar">
+      <button id="image-viewer-close" class="image-viewer-icon image-viewer-close" type="button">×</button>
+      <button id="image-viewer-dots" class="image-viewer-icon image-viewer-dots" type="button">⋯</button>
+      <div id="image-viewer-menu" class="image-viewer-menu"><a id="image-save-link" class="image-menu-item" href="#" download>Сохранить фото</a><button id="image-delete-button" class="image-menu-item image-viewer-delete" type="button" hidden>Удалить публикацию</button></div>
+    </div>
+    <div class="image-viewer-body"><img class="image-viewer-image" src="" alt="Фото"><section class="image-viewer-comments-section"><div class="image-viewer-comments-title">Комментарии</div><div class="image-viewer-comments"></div></section></div>
+  </div>
+
+  <div id="theme-picker" class="theme-picker" hidden>
+    <div class="theme-picker-backdrop"></div>
+    <div class="theme-picker-panel">
+      <div class="theme-picker-head"><h2>Тема Sqawe</h2><button id="theme-picker-close" class="image-viewer-icon" type="button">×</button></div>
+      <div id="theme-options" class="theme-options"></div>
+    </div>
+  </div>
+
+  <nav class="nav">
+    <button data-view="feed-view" class="nav-btn active" type="button">⌂<small>Лента</small></button>
+    <button data-view="friends-view" class="nav-btn" type="button">♡<small>Друзья</small></button>
+    <button data-view="people-view" class="nav-btn" type="button">◉<small>Люди</small></button>
+    <button data-view="create-view" class="nav-btn" type="button">＋<small>Создать</small></button>
+    <button data-view="profile-view" class="nav-btn" type="button">●<small>Профиль</small></button>
+  </nav>
+</div>
+<script src="/static/app.js"></script>
+</body>
+</html>
